@@ -26,6 +26,7 @@ namespace OpenBabel {
 
 extern OBAtomTyper atomtyper;
 
+//! \brief Table of common protein residues in PDB files
 class OBResidueData : public OBGlobalDataBase
 {
     int                                _resnum;
@@ -550,7 +551,7 @@ static bool ParseConectRecord(char *buffer,OBMol &mol)
 OBResidueData::OBResidueData()
 {
   _init = false;
-  _dir = DATADIR;
+  _dir = BABEL_DATADIR;
   _envvar = "BABEL_DATADIR";
   _filename = "resdata.txt";
   _subdir = "data";

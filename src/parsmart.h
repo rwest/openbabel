@@ -1,4 +1,6 @@
 /**********************************************************************
+parsmart.h - SMART parser.
+
 Copyright (C) 1998-2001 by OpenEye Scientific Software, Inc.
 Some portions Copyright (c) 2001-2003 by Geoffrey R. Hutchison
 
@@ -55,6 +57,7 @@ GNU General Public License for more details.
 namespace OpenBabel
 {
 
+  //! \brief A SMARTS parser internal atomic expression
 typedef union _AtomExpr {
         int type;
         struct {
@@ -96,6 +99,7 @@ typedef union _AtomExpr {
 #define BT_DOWNUNSPEC 0x08
 #define BT_RING       0x09
 
+//! \brief A SMARTS parser internal bond expression
 typedef union _BondExpr {
         int type;
         struct {
@@ -114,6 +118,7 @@ typedef union _BondExpr {
         } bin;
     } BondExpr;
 
+//! \brief A SMARTS parser internal bond specification
 typedef struct {
         BondExpr *expr;
         int src,dst;
@@ -121,6 +126,7 @@ typedef struct {
         bool grow;
     } BondSpec;
 
+//! \brief A SMARTS parser internal bond specification
 typedef struct {
   AtomExpr *expr;
   int visit;
@@ -129,6 +135,7 @@ typedef struct {
   int vb;
     } AtomSpec;
 
+//! \brief A SMARTS parser internal pattern
 typedef struct {
   int aalloc,acount;
   int balloc,bcount;
@@ -139,6 +146,7 @@ typedef struct {
 } Pattern;
 
 // class introduction in parsmart.cpp
+//! \brief SMARTS (SMiles ARbitrary Target Specification) substructure searching
 class OBSmartsPattern
 {
 protected:
@@ -210,3 +218,5 @@ void SmartsLexReplace(std::string &,
 
 #endif // OB_PARSMART_H
 
+//! \file parsmart.h 
+//! \brief SMART parser.

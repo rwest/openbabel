@@ -1,6 +1,11 @@
 /**********************************************************************
+phmodel.cpp - Read pH rules and assign charges.
+
 Copyright (C) 1998-2001 by OpenEye Scientific Software, Inc.
 Some portions Copyright (c) 2001-2003 by Geoffrey R. Hutchison
+
+This file is part of the Open Babel project.
+For more information, see <http://openbabel.sourceforge.net/>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,7 +37,7 @@ extern OBAtomTyper atomtyper;
 OBPhModel::OBPhModel()
 {
   _init = false;
-  _dir = DATADIR;
+  _dir = BABEL_DATADIR;
   _envvar = "BABEL_DATADIR";
   _filename = "phmodel.txt";
   _subdir = "data";
@@ -128,6 +133,16 @@ void OBPhModel::CorrectForPH(OBMol &mol)
   atomtyper.CorrectAromaticNitrogens(mol);
 }
 
+// Portions of this documentation adapted from the JOELib docs, written by
+// Joerg Wegner
+/** \class OBChemTsfm
+    \brief SMARTS based structural modification (chemical transformation)
+
+    Transformation of chemical structures can be used for pH value correction
+    (i.e. via OBPhModel and OBMol::CorrectForPH()). The OBChemTsfm class
+    defines SMARTS based TRANSFORM patterns to delete atoms, change atom types,
+    atom formal charges, and bond types.
+ **/
 bool OBChemTsfm::Init(string &bgn,string &end)
 {
   if (!_bgn.Init(bgn)) return(false);

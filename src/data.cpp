@@ -1,6 +1,11 @@
 /**********************************************************************
+data.cpp - Global data and resource file parsers.
+
 Copyright (C) 1998-2001 by OpenEye Scientific Software, Inc.
 Some portions Copyright (c) 2001-2003 by Geoffrey R. Hutchison
+
+This file is part of the Open Babel project.
+For more information, see <http://openbabel.sourceforge.net/>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -78,7 +83,7 @@ extern void ThrowError(string&);
 OBElementTable::OBElementTable()
 {
   _init = false;
-  _dir = DATADIR;
+  _dir = BABEL_DATADIR;
   _envvar = "BABEL_DATADIR";
   _filename = "element.txt";
   _subdir = "data";
@@ -247,7 +252,7 @@ int OBElementTable::GetAtomicNum(const char *sym, unsigned short iso)
 OBIsotopeTable::OBIsotopeTable()
 {
   _init = false;
-  _dir = DATADIR;
+  _dir = BABEL_DATADIR;
   _envvar = "BABEL_DATADIR";
   _filename = "isotope.txt";
   _subdir = "data";
@@ -348,7 +353,7 @@ Current atom types include (defined in the top line of the data file types.txt):
 OBTypeTable::OBTypeTable()
 {
   _init = false;
-  _dir = DATADIR;
+  _dir = BABEL_DATADIR;
   _envvar = "BABEL_DATADIR";
   _filename = "types.txt";
   _subdir = "data";
@@ -472,7 +477,7 @@ extern OBExtensionTable extab in mol.h.
 OBExtensionTable::OBExtensionTable()
 {
   _init = false;
-  _dir = DATADIR;
+  _dir = BABEL_DATADIR;
   _envvar = "BABEL_DATADIR";
   _filename = "extable.txt";
   _subdir = "data";
@@ -564,6 +569,7 @@ io_type TextToType(string typestring)
   else if (typestring == "PCMODEL")		return(PCMODEL);
   else if (typestring == "JAGUARIN")		return(JAGUARIN);
   else if (typestring == "JAGUAROUT")		return(JAGUAROUT);
+  else if (typestring == "PQS")                 return(PQS);
   else if (typestring == "REPORT")		return(REPORT);
   else if (typestring == "MSF")			return(MSF);
   else if (typestring == "SCHAKAL")		return(SCHAKAL);

@@ -1,4 +1,6 @@
 /**********************************************************************
+base.h - Base classes to build a graph
+
 Copyright (C) 1998-2001 by OpenEye Scientific Software, Inc.
 Some portions Copyright (c) 2001-2003 by Geoffrey R. Hutchison
 
@@ -15,11 +17,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 
+#include "babelconfig.h"
+
 #ifndef OB_BASE_H
 #define OB_BASE_H
 
 #include <vector>
+
+#if HAVE_IOSTREAM
 #include <iostream>
+#elif HAVE_IOSTREAM_H
+#include <iostream.h>
+#endif
 
 namespace OpenBabel
 {
@@ -29,9 +38,9 @@ class OBNodeBase;
 class OBEdgeBase;
 class OBGraphBase;
 
-/** Base Class
+/** \brief Base Class
 
- The various classes (Atom, Bond, Molecule) inherit from base classes
+ The various classes (Atom, Bond, Molecule) inherit from base classes--
  OBBase is just a placeholder class
 */
 class OBBase
@@ -39,7 +48,7 @@ class OBBase
 public:
 };
 
-/** Node Base Class
+/** \brief Node Base Class
 
 The base class for nodes (e.g. atoms) in a graph-theoretical representation.
  */
@@ -56,7 +65,7 @@ protected:
         std::vector<OBEdgeBase*> _vbond;
 
 public:
-	//!<Used internally by graph traversal algorithms
+	//! Used internally by graph traversal algorithms
 	bool Visit;
 
         //! Constructor
@@ -111,7 +120,7 @@ public:
         //@}
 };
 
-/** Edge Base Class
+/** \brief Edge Base Class
 
 The base class for edges (e.g. bonds) in a graph-theoretical representation.
  */
@@ -162,7 +171,7 @@ public:
 	//@}
 };
 
-/*! Graph Base Class
+/*! \brief Graph Base Class
 
 The base class for graphs (e.g. rings, molecules, etc.) in a 
 graph-theoretical representation.

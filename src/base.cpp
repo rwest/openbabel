@@ -1,6 +1,11 @@
 /**********************************************************************
+base.cpp - Base classes to build a graph
+
 Copyright (C) 1998-2001 by OpenEye Scientific Software, Inc.
 Some portions Copyright (c) 2001-2003 by Geoffrey R. Hutchison
+
+This file is part of the Open Babel project.
+For more information, see <http://openbabel.sourceforge.net/>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -12,10 +17,21 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 
+#include "babelconfig.h"
+
 #include "base.h"
 
+#if HAVE_IOSTREAM
 #include <iostream>
+#elif HAVE_IOSTREAM_H
+#include <iostream.h>
+#endif
+
+#if HAVE_FSTREAM
 #include <fstream>
+#elif HAVE_FSTREAM_H
+#include <fstream.h>
+#endif
 
 using namespace std;
 
@@ -195,8 +211,6 @@ bool OBGraphBase::SetVisitLock(bool v)
 	return(true);
 }
 
-} // namespace OpenBabel
-
 /*! \mainpage
   \section intro Introduction
 
@@ -235,4 +249,24 @@ other programmers will contribute to the project.
 Thanks to all who have helped with Babel, OBabel, OELib and Open Babel.
 The list is long and growing.
 
+  \section pointers Key Modules
+
+The heart of Open Babel lies in the \link OpenBabel::OBMol OBMol\endlink, 
+\link OpenBabel::OBAtom OBAtom\endlink, and 
+\link OpenBabel::OBBond OBBond\endlink classes,
+which handle operations on atoms, bonds and molecules. Newcomers should 
+start with looking at the \link OpenBabel::OBMol OBMol\endlink class, 
+designed to store the basic information
+in a molecule and to perceive information about a molecule.
+
+
+transformations and automatic perception of properties is performed in a 
+"lazy" manner. That is, until you call for partial atomic charges, no 
+charges are calculated. This ensures faster transformations of chemical data
+-- properties that are not needed for your code will typically not be 
+calculated.
+
 */
+
+} // namespace OpenBabel
+

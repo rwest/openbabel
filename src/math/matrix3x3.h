@@ -1,4 +1,6 @@
 /**********************************************************************
+matrix3x3.cpp - Rotation matrix.
+
 Copyright (C) 1998-2001 by OpenEye Scientific Software, Inc.
 Some portions Copyright (c) 2001-2003 by Geoffrey R. Hutchison
 
@@ -20,12 +22,16 @@ GNU General Public License for more details.
 
 #include "oberror.h"
 
-#ifdef __sgi
-#include <iostream.h>
-#include <fstream.h>
-#else
+#if HAVE_IOSTREAM
 #include <iostream>
+#elif HAVE_IOSTREAM_H
+#include <iostream.h>
+#endif
+                                                                                
+#if HAVE_FSTREAM
 #include <fstream>
+#elif HAVE_FSTREAM_H
+#include <fstream.h>
 #endif
 
 #include <math.h>

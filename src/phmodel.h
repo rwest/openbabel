@@ -1,4 +1,6 @@
 /**********************************************************************
+phmodel.h - Read pH rules and assign charges.
+
 Copyright (C) 1998-2001 by OpenEye Scientific Software, Inc.
 Some portions Copyright (c) 2001-2003 by Geoffrey R. Hutchison
 
@@ -23,9 +25,10 @@ GNU General Public License for more details.
 
 namespace OpenBabel {
 
+// class introduction in phmodel.cpp
 class OBChemTsfm
 {
-  std::vector<int>                       _vadel;
+  std::vector<int>                            _vadel;
   std::vector<std::pair<int,int> >            _vele;
   std::vector<std::pair<int,int> >            _vchrg;
   std::vector<std::pair<int,int> >            _vbdel;
@@ -38,10 +41,10 @@ public:
   bool Apply(OBMol&);
 };
 
-
+//! \brief Corrections for pH used by OBMol::CorrectForPH()
 class OBPhModel : public OBGlobalDataBase
 {
-  std::vector<std::vector<int> >                           _mlist;
+  std::vector<std::vector<int> >                      _mlist;
   std::vector<OBChemTsfm*>                            _vtsfm;
   std::vector<std::pair<OBSmartsPattern*,std::vector<double> > > _vschrg;
  public:

@@ -1,5 +1,10 @@
 /**********************************************************************
+fileformat.cpp - Read and write file formats.
+
 Copyright (C) 2000-2003 by Geoffrey Hutchison
+
+This file is part of the Open Babel project.
+For more information, see <http://openbabel.sourceforge.net/>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -58,6 +63,7 @@ bool OBFileFormat::ReadMolecule(istream &ifs, OBMol &mol, const char *title)
     case OEBINARY:  result = ReadBinary(ifs,mol);		break;
     case PDB:       result = ReadPDB(ifs,mol,title);		break;
     case PREP:	    result = ReadAmberPrep(ifs,mol,title);	break;
+    case PQS:       result = ReadPQS(ifs,mol,title);            break;
     case JAGUAROUT: result = ReadJaguar(ifs,mol,title);		break;
     case QCHEMOUT:  result = ReadQChem(ifs,mol,title);		break;
     case SDF:       result = ReadSDFile(ifs,mol,title);		break;
@@ -117,6 +123,7 @@ bool OBFileFormat::WriteMolecule(ostream &ofs,OBMol &mol,
 #ifndef WIN32
     case POV:	    WritePovray(ofs,mol,options);       break;
 #endif
+    case PQS:       WritePQS(ofs,mol);                  break;
     case QCHEMIN:   WriteQChem(ofs,mol);		break;
     case REPORT:    WriteReport(ofs,mol);		break;
     case SDF:       WriteSDFile(ofs,mol,dimension);     break;

@@ -1,4 +1,6 @@
 /**********************************************************************
+data.h - Global data and resource file parsers.
+
 Copyright (C) 1998-2001 by OpenEye Scientific Software, Inc.
 Some portions Copyright (c) 2001-2003 by Geoffrey R. Hutchison
 
@@ -15,13 +17,24 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 
+#include "babelconfig.h"
+
 #ifndef OB_DATA_H
 #define OB_DATA_H
 
 #include <stdio.h>
 
+#if HAVE_IOSTREAM
 #include <iostream>
+#elif HAVE_IOSTREAM_H
+#include <iostream.h>
+#endif
+                                                                                
+#if HAVE_FSTREAM
 #include <fstream>
+#elif HAVE_FSTREAM_H
+#include <fstream.h>
+#endif
 
 #include <vector>
 #include <string>
@@ -46,12 +59,12 @@ typedef enum { UNDEFINED,
                PCMODEL, PDB, POV, PREP, QCHEMIN, QCHEMOUT, REPORT,
                SCHAKAL, SDF, SHELX, SKC, SMI, SPARTAN, SPARTANMM,
                SPARTANSEMI, TGF, TINKER, TITLE, UNICHEM, VIEWMOL,
-               XED, XYZ, ZINDO, CRK2D, CRK3D
-	       // Insert new formats here (at the end) for backwards 
-	       // compatibility
+               XED, XYZ, ZINDO, CRK2D, CRK3D, PQS
+	       // Insert new formats here (at the end)
+	       // for backwards compatibility
              } io_type;
 
-//! Base data table class, handles reading data files
+//! \brief Base data table class, handles reading data files
 //!
 //! Base data table class--reads ASCII data files in various formats
 //! -# Checks for the environment variable _envvar (defaults to "BABEL_DATADIR")
@@ -86,7 +99,8 @@ class OBGlobalDataBase
   virtual void ParseLine(const char*) {}
 };
 
-//! Element data type
+//! \brief Individual element data type
+//!
 //! Stores a variety of data about an individual element
 class OBElement
 {
@@ -153,7 +167,7 @@ class OBIsotopeTable : public OBGlobalDataBase
 
   void	ParseLine(const char*);
   //! Return the exact masss of the isotope
-  //   (or by default (i.e. "isotope 0") the most abundant isotope)
+  //!   (or by default (i.e. "isotope 0") the most abundant isotope)
   double	GetExactMass(const unsigned int atomicNum,
 			     const unsigned int isotope = 0);
 };

@@ -1,6 +1,11 @@
 /**********************************************************************
+rotor.cpp - Rotate torsional according to rotor rules.
+
 Copyright (C) 1998-2000 by OpenEye Scientific Software, Inc.
 Some portions Copyright (c) 2001-2003 by Geoffrey R. Hutchison
+
+This file is part of the Open Babel project.
+For more information, see <http://openbabel.sourceforge.net/>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -147,7 +152,7 @@ bool GetDFFVector(OBMol &mol,vector<int> &dffv,OBBitVec &bv)
 	    {
 	      atom1 = mol.GetAtom(natom);
 	      for (bond = atom1->BeginBond(j);bond;bond = atom1->NextBond(j))
-		if (!used.BitIsOn(bond->GetNbrAtomIdx(atom1)) &&
+	if (!used.BitIsOn(bond->GetNbrAtomIdx(atom1)) &&
 		    !curr.BitIsOn(bond->GetNbrAtomIdx(atom1)))
 		  if (!(bond->GetNbrAtom(atom1))->IsHydrogen())
 		    next.SetBitOn(bond->GetNbrAtomIdx(atom1));
@@ -167,10 +172,10 @@ bool GetDFFVector(OBMol &mol,vector<int> &dffv,OBBitVec &bv)
 
 static double MinimumPairRMS(OBMol&,double*,double*,bool &);
 
+//! Rotates each bond to zero and 180 degrees and tests
+//! if the 2 conformers are duplicates.  if so - the symmetric torsion
+//! values are removed from consideration during a search
 void OBRotorList::RemoveSymVals(OBMol &mol)
-     //this function rotates each bond to zero and 180 degrees and tests
-     //if the 2 conformers are duplicates.  if so - the symmetric torsion
-     //values are removed from consideration during a search
 {
   double *c,*c1,*c2;
   c1 = new double [mol.NumAtoms()*3];
@@ -316,9 +321,9 @@ static double MinimumPairRMS(OBMol &mol,double *a,double *b,bool &one2one)
   return(sqrt(d_2));
 }
 
+//! Determines which atoms the internal energy should be calculated
+//! if a the dihedral angle of the rotor is modified
 bool OBRotorList::SetEvalAtoms(OBMol &mol)
-     //determines which atoms the internal energy should be calculated
-     //if a the dihedral angle of the rotor is modified
 {
   int j;
   OBBond *bond;
@@ -766,7 +771,7 @@ OBRotorRules::OBRotorRules()
 {
   _quiet=false;
   _init = false;
-  _dir = DATADIR;
+  _dir = BABEL_DATADIR;
   _envvar = "BABEL_DATADIR";
   _filename = "torlib.txt";
   _subdir = "omega";

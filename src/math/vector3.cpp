@@ -1,6 +1,11 @@
 /**********************************************************************
+vector3.cpp - Handle 3D coordinates.
+
 Copyright (C) 1998-2001 by OpenEye Scientific Software, Inc.
 Some portions Copyright (c) 2001-2003 by Geoffrey R. Hutchison
+
+This file is part of the Open Babel project.
+For more information, see <http://openbabel.sourceforge.net/>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -82,7 +87,7 @@ v3.normalize();
     random number generator obRand, or uses the system number
     generator with a time seed if obRand == NULL.
        
-    @param obRand random number generator to use, or 0L, if the
+    @param obRandP random number generator to use, or 0L, if the
     system random number generator (with time seed) should be used
   */
   void vector3::randomUnitVector(OBRandom *obRandP)
@@ -268,7 +273,7 @@ v3.normalize();
     \todo Replace this method with a more fool-proof version that
     does not call exit()
 
-    @param v a reference to a vector where the result will be
+    @param res a reference to a vector where the result will be
     stored
   */
   void vector3::createOrthoVector(vector3 &res) const

@@ -1,4 +1,6 @@
 /**********************************************************************
+chains.h - Parse chains for macromolecules or SMILES.
+
 Copyright (C) 1998-2001 by OpenEye Scientific Software, Inc.
 Some portions Copyright (c) 2001-2003 by Geoffrey R. Hutchison
 
@@ -33,6 +35,7 @@ typedef struct
     int n1, n2, n3, n4;
 } Template;
 
+//! \brief Perceives peptide or nucleotide chains and residues in an OBMol
 class OBChainsParser
 {
 public:

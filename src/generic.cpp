@@ -1,6 +1,11 @@
 /**********************************************************************
+generic.cpp - Handle generic data class.
+
 Copyright (C) 1998-2001 by OpenEye Scientific Software, Inc.
 Some portions Copyright (c) 2001-2003 by Geoffrey R. Hutchison
+
+This file is part of the Open Babel project.
+For more information, see <http://openbabel.sourceforge.net/>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -137,8 +142,6 @@ OBPairData::OBPairData()
 
 //
 //member functions for OBVirtualBond class
-//OBVirtualBond is used to temporarily store bonds that reference
-//an atom that has not yet been added to a molecule 
 //
 
 OBVirtualBond::OBVirtualBond()
@@ -160,8 +163,6 @@ OBVirtualBond::OBVirtualBond(int bgn,int end,int ord,int stereo)
 
 //
 // member functions for OBUnitCell class
-//  used for storing information about periodic boundary conditions
-//   with conversion from three-vector to a, b, c, alpha, beta, gamma
 //
 OBUnitCell::OBUnitCell()
 {
@@ -265,7 +266,7 @@ matrix3x3 OBUnitCell::GetOrthoMatrix()
 
 
 //
-//member functions for OBRingData class - stores SSSR set
+//member functions for OBRingData class
 //
 
 OBRingData::OBRingData()
@@ -306,7 +307,7 @@ OBRingData::~OBRingData()
 }
 
 /*!
-**\brief OBRingdata assignment operator
+**\brief OBRingData assignment operator
 **\param src reference to original OBRingData object (rhs)
 **\return reference to changed OBRingData object (lhs)
 */
@@ -410,7 +411,7 @@ void OBAngle::Clear()
 
 /*!
 **\brief Sets the 3 atoms in the angle
-**\param pointers to each OBAtom
+** Parameters are pointers to each OBAtom
 */
 void OBAngle::SetAtoms(OBAtom *vertex,OBAtom *a,OBAtom *b)
 {

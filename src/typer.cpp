@@ -1,6 +1,11 @@
 /**********************************************************************
+typer.cpp - Open Babel atom typer.
+
 Copyright (C) 1998-2001 by OpenEye Scientific Software, Inc.
 Some portions Copyright (c) 2001-2003 by Geoffrey R. Hutchison
+
+This file is part of the Open Babel project.
+For more information, see <http://openbabel.sourceforge.net/>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,7 +52,7 @@ OBAtomTyper      atomtyper;
 OBAtomTyper::OBAtomTyper()
 {
   _init = false;
-  _dir = DATADIR;
+  _dir = BABEL_DATADIR;
   _envvar = "BABEL_DATADIR";
   _filename = "atomtyp.txt";
   _subdir = "data";
@@ -390,10 +395,24 @@ void OBAtomTyper::CorrectAromaticNitrogens(OBMol &mol)
 	atom->SetImplicitValence(3);
 }
 
+/*! \class OBAromaticTyper
+  \brief Assigns aromatic typing to atoms and bonds
+
+  The OBAromaticTyper class is designed to read in a list of 
+  aromatic perception rules and apply them to molecules. The code 
+  that performs typing is not usually used directly -- it is usually 
+  done automatically when their corresponding values are requested of atoms 
+  or bonds.
+\code
+  atom->IsAromatic();
+  bond->IsAromatic();
+  bond->IsDouble(); // needs to check aromaticity and define Kekule structures
+\endcode
+*/
 OBAromaticTyper::OBAromaticTyper()
 {
   _init = false;
-  _dir = DATADIR;
+  _dir = BABEL_DATADIR;
   _envvar = "BABEL_DATADIR";
   _filename = "aromatic.txt";
   _subdir = "data";
@@ -652,8 +671,6 @@ void OBAromaticTyper::SelectRootAtoms(OBMol &mol, bool avoidInnerRingAtoms)
 	    // count the number of neighbor ring atoms
 	    atom = mol.GetAtom(rootAtom);
 	    ringNbrs = heavyNbrs = 0;
-
-	    cout << " in avoid inner root atoms " << endl;
 
 	    for (nbr = atom->BeginNbrAtom(l);nbr;nbr = atom->NextNbrAtom(l))
 	      {
