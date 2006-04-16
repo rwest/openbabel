@@ -1,8 +1,9 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([Open Babel], 2.0.0, openbabel-discuss@lists.sourceforge.net, openbabel)
-AC_CONFIG_SRCDIR(src/typer.cpp)
+AC_INIT([Open Babel], 2.0.1, openbabel-discuss@lists.sourceforge.net, openbabel)
+AC_CONFIG_SRCDIR(src/zipstreamimpl.h)
 AM_INIT_AUTOMAKE([no-define])
 AM_MAINTAINER_MODE
+AX_MAINTAINER_MODE_AUTO_SILENT
 AM_CONFIG_HEADER(src/config.h)
 AC_DEFINE_UNQUOTED([BABEL_VERSION], ["AC_PACKAGE_VERSION"], [The version of Open Babel])
 
@@ -16,7 +17,44 @@ AC_CANONICAL_HOST
 
 AC_DEFINE_DIR([BABEL_DATADIR], [datadir/AC_PACKAGE_TARNAME], [Where the data files are located])
 
-AC_DEFINE([OBAPI], [], [Used to export symbols for DLL / shared library builds])
+AH_VERBATIM([OBAPI], 
+[/* Used to export symbols for DLL / shared library builds */
+#if defined(WIN32)
+ #if defined(USING_OBDLL) // e.g. in src/main.cpp
+  #define OBAPI __declspec(dllimport)
+ #else
+  #define OBAPI __declspec(dllexport)
+ #endif
+#else //Everything else (behaviour as original)
+ #define OBAPI
+#endif
+])
+
+AH_VERBATIM([EXTERN], 
+[/* Used to export symbols for DLL / shared library builds */
+#if defined(WIN32)
+ #if defined(USING_OBDLL) // e.g. in src/main.cpp
+  #define EXTERN __declspec(dllimport) extern
+ #else
+  #define EXTERN __declspec(dllexport) extern
+ #endif
+#else //Everything else (behaviour as original)
+ #define EXTERN extern
+#endif
+])
+
+AH_VERBATIM([OBCONV], 
+[/* Used to export symbols for DLL / shared library builds */
+#if defined(WIN32)
+ #if defined(USING_OBDLL) // e.g. in src/main.cpp
+  #define OBCONV __declspec(dllimport)
+ #else
+  #define OBCONV __declspec(dllexport)
+ #endif
+#else //Everything else (behaviour as original)
+ #define OBCONV
+#endif
+])
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -54,8 +92,18 @@ dnl libtool
 dnl You can set the shared library version in src/Makefile.am
 dnl AC_DISABLE_SHARED
 AC_LIBTOOL_DLOPEN
+dnl We do support DLLs on Win32 systems
+AC_LIBTOOL_WIN32_DLL
 AM_PROG_LIBTOOL
 
+case $host in
+     *-*-cygwin*)
+	dynamic_modules="no"
+	;;
+     *-*-mingw*)
+	dynamic_modules="no"
+	;;
+esac
 AM_CONDITIONAL(BUILD_SHARED, test "$dynamic_modules" = "yes" -a "$enable_shared" = "yes")
 
 oldmodule=$module
@@ -70,8 +118,11 @@ AC_CHECK_LIB(m, asin, , exit)
 AC_CHECK_LIB(c, dlopen, LIBDL="", [AC_CHECK_LIB(dl, dlopen, LIBDL="-ldl")])
 AC_SUBST(LIBDL)
 
-AM_PATH_XML2(2.6.0)
+AM_PATH_XML2(2.6.5)
 AM_CONDITIONAL(BUILD_XML, test x"$XML_LIBS" != "x")
+
+AC_CHECK_LIB(inchi, GetINCHI, LIBINCHI="-linchi", LIBINCHI="")
+AM_CONDITIONAL(BUILD_INCHI, test x"$LIBINCHI" == "x")
 
 CHECK_ZLIB
 AC_CHECK_LIB(z, inflateEnd)

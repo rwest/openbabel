@@ -179,7 +179,8 @@ bool MOL2Format::ReadMolecule(OBBase* pOb, OBConversion* pConv)
             hasPartialCharges = true;
 
         // Add residue information if it exists
-        if (resnum != -1 && resname != "")
+        if (resnum != -1 && resnum != 0 && 
+	    strlen(resname) != 0 && strncmp(resname,"<1>", 3) != 0)
         {
             OBResidue *res  = (mol.NumResidues() > 0) ?
                               mol.GetResidue(mol.NumResidues()-1) : NULL;
@@ -331,6 +332,10 @@ bool MOL2Format::WriteMolecule(OBBase* pOb, OBConversion* pConv)
     vector<OBNodeBase*>::iterator i;
     vector<int> labelcount;
     labelcount.resize( etab.GetNumberOfElements() );
+
+    ttab.SetFromType("INT");
+    ttab.SetToType("SYB");
+
     for (atom = mol.BeginAtom(i);atom;atom = mol.NextAtom(i))
     {
 
@@ -341,11 +346,10 @@ bool MOL2Format::WriteMolecule(OBBase* pOb, OBConversion* pConv)
         sprintf(label,"%s%d",
                 etab.GetSymbol(atom->GetAtomicNum()),
                 ++labelcount[atom->GetAtomicNum()]);
+	strcpy(rlabel,"<1>");
+	strcpy(rnum,"1");
 
         str = atom->GetType();
-
-	ttab.SetFromType("INT");
-	ttab.SetToType("SYB");
         ttab.Translate(str1,str);
 
         //
@@ -354,18 +358,11 @@ bool MOL2Format::WriteMolecule(OBBase* pOb, OBConversion* pConv)
 
         if ( (res = atom->GetResidue()) )
         {
-            // Use original atom names
-
-            sprintf(label,"%s",(char*)res->GetAtomID(atom).c_str());
-            //	        sprintf(label,"%s",(char*)atom->GetType()); // internal type
-            strcpy(rlabel,(char*)res->GetName().c_str());
-            //      strcpy(rnum,(char*)res->GetAtomID(atom).c_str());
-            sprintf(rnum,"%d",res->GetNum());
-        }
-        else
-        {
-            strcpy(rlabel,"UNK");
-            strcpy(rnum,"1");
+	  // use original atom names defined by residue
+	  sprintf(label,"%s",(char*)res->GetAtomID(atom).c_str());
+	  // make sure that residue name includes its number
+	  sprintf(rlabel,"%s%d",res->GetName().c_str(), res->GetNum());
+	  sprintf(rnum,"%d",res->GetNum());
         }
 
         sprintf(buffer,"%7d%1s%-6s%12.4f%10.4f%10.4f%1s%-5s%4s%1s %-8s%10.4f",

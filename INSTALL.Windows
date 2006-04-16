@@ -1,22 +1,19 @@
-How to build OpenBabel with Visual C++6 in Visual Studio
+How to build OpenBabel in MS Visual Studio
 --------------------------------------------------------
+
+A precompiled version of OpenBabel for Windows is available,
+with a GUI and a command line interface. Using this is easier than
+compiling, which is necessary only if you wish to change the code.
  
-Double click on vc6.bat, located in the \windows subdirectory.
-This copies the appropriate filess to the right places and starts up 
-Visual Studio.
+Project files for a Windows build are available in the 
+openbabel/windows folder for Visual C++ 6, and Visual C++ 8 (Visual Studio 2005).
+See the ReadMe.txt file in that folder.
 
-Click the Build icon or press F7.
+If you wish to compile under the CygWin environment, you should read the
+generic UNIX-style compile and installation instructions in the INSTALL file.
+Currently, there are slight differences in the libraries produced by CygWin
+and Visual C++ build environments.
 
-There are a few warnings (unused local variables, etc) which can be ignored.
-
-The obabel.exe file will be built in the \src folder and can be used from there.
-This is a command line program and needs to be run from Start/Run or from an
-MSDOS window. If it is moved, the txt files from this folder need to be moved
-along with it.
- 
-If necessary, obabel.exe can also be built in a Debug configuration, but expect
-a very large number of C4786 warnings, which can also be ignored, but make the
-compilation slow.
-
-This probably also works for Visual Studio.NET, since the project files will be
-automatically converted. (Not yet tested.)
+If you have build files or advice on compiling OpenBabel with any
+other Windows compiler, we would be pleased if you could share the
+experience.

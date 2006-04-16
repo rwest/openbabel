@@ -18,6 +18,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 ***********************************************************************/
 
+// used to set import/export for Cygwin DLLs
+#ifdef WIN32
+#define USING_OBDLL
+#endif
+
 #include "babelconfig.h"
 #if HAVE_IOSTREAM
 	#include <iostream>
@@ -80,7 +85,7 @@ int main(int argc,char *argv[])
 
   //Save name of program without its path (and .exe)
   string pn(argv[0]);
-  unsigned int pos;
+  int pos;
 #ifdef _WIN32
   pos = pn.find(".exe");
   if(pos!=string::npos)

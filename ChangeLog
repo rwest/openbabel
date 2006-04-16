@@ -1,3 +1,394 @@
+2006-04-16  Chris Morley <ob@gaseq.co.uk>
+
+	* INSTALL.Windows, windows: Updated Windows build files for Visual
+	C++ VC6 and VC8 for 2.0.1 release.
+
+	* Makefile.am, Makefile.in: Remove windows-vc2005 from list for
+	distribution.
+
+2006-04-15  Geoffrey Hutchison  <babel@geoffhutchison.net>
+
+	* test/Makefile.am, test/Makefile.in: Only run CML tests if XML
+	formats were compiled. (i.e., if libxml not available, can't test
+	CML)
+	
+	* test/ringtest.sh, test/smartstest.sh, test/cmltest/test.sh:
+	Minor shell script portability fixes.
+
+2006-04-13  Geoffrey Hutchison  <babel@geoffhutchison.net>
+
+	* scripts/perl/META.yml, scripts/python/setup.py: Packaging
+	changes for the scripting wrappers.
+	
+	* src/formats/mdlformat.cpp: Remove inadvertent debug statement
+	left from yesterday.
+
+2006-04-12  Geoffrey Hutchison  <babel@geoffhutchison.net>
+
+	* src/formats/mdlformat.cpp (ReadMolecule): Add support for atom
+	stereo in v2000 format and OBChiralData. Partly addresses
+	PR#1463796.
+
+	* src/formats/smilesformat.cpp (GetChiralStereo): If we have a 2D
+	molecule and stereochemistry is unspecified, don't assume we have
+	a particular stereochemistry. Partly address PR#1463796.
+	Also fix a problem with writing chiral "H" designations with explicit
+	hydrogens, introduced with yesterday's fix to
+	OBAtom::ImplicitHydrogenCount.
+
+2006-04-11  Geoffrey Hutchison  <babel@geoffhutchison.net>
+
+	* src/obconversion.h, src/obconversion.cpp: Added a test to be
+	sure that we do not check gzip encoding multiple times (much less
+	try to gzip repeatedly). Fix PR#1465586 where ReadString() or
+	ReadFile() followed by Read() will fail because input streams are
+	closed prematurely.
+
+	* src/atom.cpp (ImplicitHydrogenCount): Fix a bug where formulas
+	were calculated incorrectly -- explicit hydrogens should count
+	against an implicit hydrogen count too. Fixes part of PR#1463787.
+	(i.e., SMARTS 'h' token was matching total number of hydrogens)
+
+	* src/mol.cpp (AddBond): Fix a bug exposed by PDB parsing, where
+	code attempts to add a bond from one atom to itself.
+
+	* src/formats/mol2format.cpp: Fix residue parsing to remove
+	calls to create a residue when in fact, the molecule has no residues.
+
+	* src/formats/pdbformat.cpp: Fix CONECT record parsing to read
+	malformed records (e.g., created by very old Open Babel versions)
+	via splitting by spaces. Fixes PR#1468802.
+
+	* src/parsmart.cpp: Reformat indentation for clearer code
+	reading. Fix bug with syntax of 'H' token -- should refer to the
+	*total* number of hydrogens. PR#1463787.
+
+	* test/smartsresults.txt: Regenerate after above bug-fixes.
+
+	* src/formats/crkformat.cpp (ReadCRK): Change to correctly read
+	multi-molecule files, where the </Structure2D> tag would appear,
+	but parsing would continue, uncovered using roundtrip testing.
+
+2006-04-08  Geoffrey Hutchison  <babel@geoffhutchison.net>
+
+	* scripts/openbabel.i, scripts/*: Update to add Cygwin DLL headers.
+
+	* THANKS: Update with contributors to 2.0.1 release.
+
+2006-04-06  Geoffrey Hutchison  <babel@geoffhutchison.net>
+
+	* src/dlhandler_unix.cpp: Upgrade to use the opendir/readdir
+	replacement for the non-portable scandir contributed by Mikael
+	Johansson.
+
+	* src/formats/Makefile.am, src/formats/Makefile.in: Fix error in
+	logic with building inchi, introduced yesterday. D'oh!
+
+	* src/formats/inchi/Makefile.am, src/formats/inchi/Makefile.in:
+	Add --no-undefined flag to produce proper compilation on Windows
+	(i.e., Cygwin).
+
+2006-04-05  Geoffrey Hutchison  <babel@geoffhutchison.net>
+
+	* NEWS: Update for 2.0.1 release notes.
+
+	* configure, configure.in, acinclude.m4: Add new configure options
+	for silent libtool use & compiler flags.
+
+	* scripts/Makefile.am, scripts/Makefile.in: Provide better
+	"distclean" target to remove python build targets and backup
+	files.
+
+	* src/mol.h: Update IsRotor() and NumRotors() documentation to
+	explain the current minimal definition of a rotatable
+	bond. Addresses PR#1463505.
+
+	* src/oberror.cpp: By default, retain a maximum of the 100 most
+	recent entries in the error log in memory. All errors will be
+	filtered and sent to output, but only retain some (not all). Fixes
+	PR#1439893.
+
+	* src/formats/inchi/Makefile.am, src/formats/inchi/Makefile.in:
+	Only install the inchi_api.h header.
+
+	* src/formats/xml/Makefile.am, src/formats/xml/Makefile.in: Turn
+	off optimization -- appears to fix crashes on FC4 and FC5,
+	PR#1447233.
+
+	* src/formats/xml/xml.h: Add std:: namespace declarations, solving
+	compilation problems on some GCC compiler versions.
+
+	* src/formats/Makefile.am, */Makefile.in: Changes to only build
+	libinchi when the library is not available on the system. Fixes
+	PR#146451.
+
+2006-03-27 Geoffrey Hutchison <babel@geoffhutchison.net>
+
+	* data/atomtyp.txt: IMPVAL for halogen ions.
+
+	* src/formats/smilesformat.cpp: Changes ported from Chris Morley's
+	development version. Reject strings with invalid ring bonds.
+
+	* scripts/: Rebuild with SWIG 1.3.29, including several bug fixes
+	and faster performance.
+
+	* configure.in, configure: Set version number to 2.0.1.
+
+2006-03-27  Michael Banck  <mbanck@gmx.net>
+
+        * src/fingerprint.h: Fix compilation error with gcc-4.1.
+          Patch by <vlaaad@users.sourceforge.net> (PR#1458311).
+        * src/formats/copyformat.cpp: Likewise.
+        * src/formats/crkformat.cpp: Likewise.
+        * src/formats/xml/cmlreactlformat.cpp: Likewise.
+        * src/formats/xml/xml.h: Likewise.
+        * src/formats/xml/xmlformat.cpp: Likewise.
+
+2006-03-26  Geoffrey Hutchison  <babel@geoffhutchison.net>
+
+	* src/Makefile.am, src/Makefile.in : Add @LIBDL@ as
+	suggested by Michael Shigorin (PR#1458706). Make sure
+	babelconfig.h isn't included in dist tarball, as suggested by
+	Michael Banck.
+
+	* scripts/python/setup.py: Fix extension name and remove reference
+	to pyopenbabel (used in 2.1) to properly build python extension.
+
+2006-03-13  Geoffrey Hutchison  <babel@geoffhutchison.net>
+
+	* configure.in, configure, src/Makefile.am, src/config.h.in: Add
+	initial support for DLL builds on Cygwin. Seems to compile a
+	libopenbabel.dll, but still linking problems for babel.exe.
+
+	* */Makefile.in: Regenerated using automake.
+
+	* src/main.cpp: Declare USING_OBDLL for Cygwin DLL usage.
+
+	* scripts/*: Build updates for Perl and Python wrappers.
+
+	* src/fingerprint.h, src/formats/xml/xml.h: Change static
+	declarations to avoid spurious memory leak warnings with valgrind.
+
+2006-03-06  Geoffrey Hutchison  <babel@geoffhutchison.net>
+
+	* configure, configure.in: Change --disable-dynamic-modules to
+	also default when static builds are used.
+
+	* data/resdata.txt: Correct typo -- now used in data.cpp, not pdb.cpp.
+
+	* src/formats/Makefile.*: Make sure libinchi is linked in when
+	compiling without dynamic modules (i.e., !BUILD_SHARED).
+
+	* scripts/*: Update using SWIG-1.3.29, adding in support for
+	OBGeneric data.
+	
+	* test/roundtrip.cpp: Change reading loop to correctly evaluate
+	EOF for files. Eliminates spurious errors with XML files.
+
+	* test/Makefile.am, test/Makefile.in, test/smartstest.sh,
+	test/ringtest.sh: New "wrapper" scripts to set BABEL_LIBDIR before
+	running tests.
+
+2006-03-02 Craig James <cjames@emolecules.com>
+
+	* src/dlhandler_unix.cpp (findFiles): Fixed a memory leak.  The
+	code to free the memory was there but had been commented out.
+
+	* src/mol.cpp (GetFormula): Molecular Formula
+	was counting only explicit hydrogens, e.g. might report C20H2.
+	Changed to report the total (implicit plus explicit) hydrogen
+	count so the formula is correct.
+
+	* src/obconversion.cpp (OptionParamArray): Fixed memory leaks.
+
+	* src/formats/mdlformat.cpp (ReadMolecule): Fixed reference to
+	uninitialized memory that caused random behavior.  Reformatted
+	file to correct indenting problems.
+
+	* src/math/vector3.cpp (Comments only): Added comments to
+	CalcTorsionAngle() explaining how it works.
+	
+2006-03-01  Geoffrey Hutchison  <ghutchis@Alumina.local>
+
+	* src/formats/mdlformat.cpp: Remove final " 0" for REGNO from
+	v3000 COUNTS line. Fixes PR#1439475, as susggested by Ernst-Georg.
+
+2006-02-24  Geoffrey Hutchison  <ghutchis@Alumina.local>
+
+	* scripts/Makefile.*: Build with SWIG 1.3.29 and later using
+	-naturalvar feature, which provides smoother access to class data.
+
+	* scripts/openbabel.i: Add access to parsmart.h, obutil.h,
+	math/vector3.h, ring.h, and vectors of int, double, vector3,
+	OBMol, OBBond, OBResidue, and OBRing for eventual 1.1 wrapper
+	release.
+
+	* scripts/perl/* scripts/python/*: As above.
+
+	* src/obconversion.cpp (ReadFile): Fix bug PR#1435777 for crash
+	when calling when only the input format was set -- code mistakenly
+	referenced pOutFormat.
+
+	* src/obutil.h: Add #ifndef SWIG to prevent wrapping of
+	rotate_coords method.
+
+	* src/parsmart.h: Add #ifndef SWIG to prevent wrapping internal
+	struct's used to form the Pattern type.
+
+	* src/math/vector3.h: Add #ifndef SWIG to prevent wrapping
+	center_coords().
+
+	* test/smartsresults.txt: Update to match recent phosphorus typing
+	rules.
+
+	* test/cmltest/test.sh: Make sure to set BABEL_LIBDIR and prevent
+	"make check" errors.
+
+2006-02-22 Chris Morley <ob@gaseq.co.uk>
+
+        * src/formats/mdlformat.cpp: Mod to read files with no M END.
+        Bug found by Hassan Mamdani.
+
+2006-02-22  Geoffrey Hutchison  <ghutchis@Alumina.local>
+
+	* src/data.cpp (AssignBonds): Make sure that OBResidueData calls
+	Init() before starting and some minor cleanups to atom type
+	assignment, exposed by comparing PDB->Mol2 files from Babel and
+	Sybyl. Thanks to Kevin Parkes for the example file.
+
+	* src/formats/mol2format.cpp (WriteMolecule): Add back atom names
+	from residues, add a residue number to each residue name (e.g.,
+	THR1 vs. THR). Should better match mol2 files from Sybyl.
+
+	* data/atomtyp.txt; Add an implicit valence rule for phosphates to
+	fix PR#1403974.
+
+2006-02-19  Geoffrey Hutchison  <babel@geoffhutchison.net>
+
+	* src/formats/pdbformat.cpp: Fix PR#1368851 for PDB export with
+	large coordinates. Optionally shifts coordinates if needed.
+
+	* src/mol.h: Fix PR#1373650 -- return NULL if no coordinate array
+	is available. Prevents segfault.
+
+	* src/atom.cpp (GetResidue): Make sure to return NULL if chains
+	perception fails.
+
+	* src/chains.cpp: If only one residue is found, and it's UNK, it's
+	probably not a residue, so nuke it. 
+
+	* src/formats/mol2format.cpp: Combined with two above fixes,
+	ensure atom labels are printed correctly for mol2 files. All three
+	fix PR#1371789.
+
+	* src/obconversion.cpp: Update documentation to point out
+	workaround for PR#1368969 with static members of OBConversion --
+	declare dummy variable to make sure LoadFormatFiles() has been called.
+
+2006-02-18  Geoffrey Hutchison  <babel@geoffhutchison.net>
+
+	* scripts/perl/OpenBabel.pm: Add dynaloader flags to ensure format
+	modules are loaded properly on Linux.
+
+	* src/mol.h, src/obiter.cpp, src/math/vector3.cpp,
+	src/math/matrix3x3.cpp: Fix documentation errors.
+
+	* src/formats/mdlformat.cpp: Fix possible memory leak with comment
+	data and ensure comment is stored properly.
+
+2006-02-08  Geoffrey Hutchison  <babel@geoffhutchison.net>
+
+	* tools/obdoc.cpp: Update to prepare wiki-fied documentation for
+	the new format database/wiki on openbabel.sourceforge.net/wiki/
+
+	* configure.in, configure, */Makefile.in: Update version number to
+	2.0.1b1.
+
+2006-01-07  Geoffrey Hutchison  <babel@geoffhutchison.net>
+
+	* src/main.cpp (main): Fix segfault bug reported by Mikael Johansson.
+
+	* src/formats/turbomoleformat.cpp: Updated with bugfixes by Mikael.
+	
+	* src/formats/inchi/IChICan2.c: Fix AIX compilation with 'hz'
+	variable contributed by Mikael.
+
+	* src/zipstreamimpl.h: Fix compilation bug reported by Rathann
+	Mierzejewski.
+	
+2005-11-26  Geoffrey Hutchison  <babel@geoffhutchison.net>
+	
+	* NEWS: Updated for 2.0.0 release final.
+
+	* data/Makefile.am: Updated to reflect renamed SMARTS_InteLigand.txt.
+
+	* *Makefile.in: Updated with automake.
+
+2005-11-25  Chris Morley  <c.morley@gaseq.co.uk>
+
+	* src/formats/mdlformat.cpp, rxnformat.cpp: Yesterdays change
+	broke rxnformat. Add option to supress $$$$.
+	
+	* windows/obabel/OBabel.dsp: This config sees fingerprints ok.
+	
+	* windows/OBRunTime.dsw: rename to OpenBabel.dsw
+	
+2005-11-24  Chris Morley  <c.morley@gaseq.co.uk>
+
+	* windows-vc2005: update files but struggling with wrong tags
+	on some files. Renamed as OpenBabel.sln
+	
+	* src/INSTALL.WINDOWS: removed. (First draft 2004 by PMR)
+	
+	* src/README: removed. (about 2003 oblib)
+
+2005-11-23  Chris Morley  <c.morley@gaseq.co.uk>
+	
+	* src/fingerprint.h, fingerprint.cpp: rearrange so that FptIndex
+	has member functions.
+	 
+	* src/formats/fastsearchformat.cpp: Add -xu option to update
+	index.
+
+	* src/parsmart.cpp(SMARTSError): Error messages were being
+	writen by fprintf(stderr... and stdout. This made no difference
+	on console output but was not being picked up by the Windows GUI.
+	Changed to obErrorLog style.
+	
+	* src/chains.cpp(GenerateByteCodes): Changed error messages to
+	obErrorLog style.
+	
+	* zipstreamimpl.h(flush):Added test for NULL ostream, which had
+	been causing crashes (in Windows).
+	
+	* kekulize.cpp: L152 bestorden was not being initialized (my new
+	debugger tells me) and the code was testing it. Moved the line 
+	bestorden=99 to before the while loop. Not extensively tested but
+	seems to give the same as before for a few molecules. 
+	
+	* src/obconversion.cpp(Write): Added conditional compilation to
+	remove zipstream call in Windows. Started crashing with 
+	---errorlevel. A kludge until we sort out	the Windows compression
+	problems. Two other similar calls in obconversion are still there...
+	
+	* src/obconversion.cpp(FullConvert): Added SetInStream and changed
+	the names of pInStream and pOutStream which were stupidly
+	given names which are also member variables! It's a bit late to
+	be altering core code like this but splitting, aggregation,
+	batch and normal all seem ok on Windows.
+	
+	* src/finger3.cpp: Change name of FP3 file.
+	
+	* data/SMARTS_InteLigand_051110.txt: replaced by 
+	SMARTS_InteLigand.txt
+	
+	*src/formats/mdlformat.cpp: Writes $$$$ for every molecule to
+	resolve bug #1362781
+		 
+	* INSTALL.windows: rewritten
+
+	windows-vc2005: Add DLL projects and update.
+	
 2005-11-18  Geoffrey Hutchison  <babel@geoffhutchison.net>
 
 	* src/formats/mdlformat.cpp: Correctly handle unspecified chiral
@@ -292,7 +683,7 @@
 
 	* windows-vc2005: Added project files for Visual C++ 2005
 
-2005-10-14  Geoffrey Hutchison  <ghutchis@Alumina.local>
+2005-10-14  Geoffrey Hutchison  <babel@geoffhutchison.net>
 
 	* Source-code documentation updates. Ensure all classes and struct
 	definitions have at least a brief description.
@@ -1247,7 +1638,7 @@
 	MOL2Format was getting uninitialized data. Lazy loading was
 	too lazy.
 
-2005-07-01  Geoffrey Hutchison  <ghutchis@Alumina.local>
+2005-07-01  Geoffrey Hutchison  <babel@geoffhutchison.net>
 
 	* src/formats/chemdrawformat.cpp, src/formats/crkformat.cpp,
 	src/formats/fastsearchformat.cpp, src/formats/mdlformat.cpp,

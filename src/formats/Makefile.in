@@ -38,6 +38,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 @BUILD_XML_TRUE@am__append_1 = xml
+@BUILD_INCHI_TRUE@am__append_2 = inchi
 subdir = src/formats
 DIST_COMMON = $(libopenbabelinclude_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
@@ -206,7 +207,7 @@ am__hinformat_la_SOURCES_DIST = hinformat.cpp
 @BUILD_SHARED_TRUE@am_hinformat_la_OBJECTS = hinformat.lo
 hinformat_la_OBJECTS = $(am_hinformat_la_OBJECTS)
 @BUILD_SHARED_TRUE@am_hinformat_la_rpath = -rpath $(pkglibdir)
-inchiformat_la_LIBADD =
+inchiformat_la_DEPENDENCIES =
 am__inchiformat_la_SOURCES_DIST = inchiformat.cpp
 @BUILD_SHARED_TRUE@am_inchiformat_la_OBJECTS = inchiformat.lo
 inchiformat_la_OBJECTS = $(am_inchiformat_la_OBJECTS)
@@ -216,7 +217,8 @@ am__jaguarformat_la_SOURCES_DIST = jaguarformat.cpp
 @BUILD_SHARED_TRUE@am_jaguarformat_la_OBJECTS = jaguarformat.lo
 jaguarformat_la_OBJECTS = $(am_jaguarformat_la_OBJECTS)
 @BUILD_SHARED_TRUE@am_jaguarformat_la_rpath = -rpath $(pkglibdir)
-libformats_la_LIBADD =
+@BUILD_INCHI_TRUE@@BUILD_SHARED_FALSE@libformats_la_DEPENDENCIES =  \
+@BUILD_INCHI_TRUE@@BUILD_SHARED_FALSE@	inchi/libinchi.la
 am__libformats_la_SOURCES_DIST = APIInterface.cpp CSRformat.cpp \
 	PQSformat.cpp alchemyformat.cpp amberformat.cpp \
 	balstformat.cpp bgfformat.cpp boxformat.cpp cacaoformat.cpp \
@@ -479,19 +481,22 @@ libopenbabelincludeHEADERS_INSTALL = $(INSTALL_HEADER)
 HEADERS = $(libopenbabelinclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
-DIST_SUBDIRS = inchi xml
+DIST_SUBDIRS = xml inchi
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
 AR = @AR@
+AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 BUILD_DOCS_FALSE = @BUILD_DOCS_FALSE@
 BUILD_DOCS_TRUE = @BUILD_DOCS_TRUE@
+BUILD_INCHI_FALSE = @BUILD_INCHI_FALSE@
+BUILD_INCHI_TRUE = @BUILD_INCHI_TRUE@
 BUILD_SCRIPTS_FALSE = @BUILD_SCRIPTS_FALSE@
 BUILD_SCRIPTS_TRUE = @BUILD_SCRIPTS_TRUE@
 BUILD_SHARED_FALSE = @BUILD_SHARED_FALSE@
@@ -514,6 +519,7 @@ CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DOXYGEN = @DOXYGEN@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
@@ -538,6 +544,7 @@ MAINT = @MAINT@
 MAINTAINER_MODE_FALSE = @MAINTAINER_MODE_FALSE@
 MAINTAINER_MODE_TRUE = @MAINTAINER_MODE_TRUE@
 MAKEINFO = @MAKEINFO@
+OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -558,9 +565,12 @@ XML2_CONFIG = @XML2_CONFIG@
 XML_CPPFLAGS = @XML_CPPFLAGS@
 XML_LIBS = @XML_LIBS@
 ac_ct_AR = @ac_ct_AR@
+ac_ct_AS = @ac_ct_AS@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
+ac_ct_DLLTOOL = @ac_ct_DLLTOOL@
 ac_ct_F77 = @ac_ct_F77@
+ac_ct_OBJDUMP = @ac_ct_OBJDUMP@
 ac_ct_RANLIB = @ac_ct_RANLIB@
 ac_ct_STRIP = @ac_ct_STRIP@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
@@ -600,16 +610,18 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-SUBDIRS = inchi $(am__append_1)
 INCLUDES = -I$(top_srcdir)/src -I$(top_srcdir)/data
 # Make sure to install the inchi_api.h header
 libopenbabelincludedir = $(includedir)/openbabel-2.0/openbabel
 libopenbabelinclude_HEADERS = inchi_api.h
 EXTRA_DIST = exampleformat.cpp
+SUBDIRS = $(am__append_1) $(am__append_2)
 
 # Unfortunately there are a few formats which still cannot compile shared
 # modules (e.g., Cygwin). So we need to keep a duplicate target for "libformats"
 @BUILD_SHARED_FALSE@noinst_LTLIBRARIES = libformats.la
+@BUILD_INCHI_FALSE@@BUILD_SHARED_FALSE@libformats_la_LIBADD = -linchi
+@BUILD_INCHI_TRUE@@BUILD_SHARED_FALSE@libformats_la_LIBADD = inchi/libinchi.la
 @BUILD_SHARED_FALSE@libformats_la_SOURCES = \
 @BUILD_SHARED_FALSE@	APIInterface.cpp \
 @BUILD_SHARED_FALSE@	CSRformat.cpp PQSformat.cpp alchemyformat.cpp \
@@ -621,7 +633,8 @@ EXTRA_DIST = exampleformat.cpp
 @BUILD_SHARED_FALSE@	fingerprintformat.cpp \
 @BUILD_SHARED_FALSE@	freefracformat.cpp gamessformat.cpp gaussformat.cpp \
 @BUILD_SHARED_FALSE@	ghemicalformat.cpp gromos96format.cpp hinformat.cpp \
-@BUILD_SHARED_FALSE@	inchiformat.cpp jaguarformat.cpp mdlformat.cpp mmodformat.cpp \
+@BUILD_SHARED_FALSE@	inchiformat.cpp \
+@BUILD_SHARED_FALSE@	jaguarformat.cpp mdlformat.cpp mmodformat.cpp \
 @BUILD_SHARED_FALSE@	mol2format.cpp mopacformat.cpp mpdformat.cpp mpqcformat.cpp \
 @BUILD_SHARED_FALSE@	nwchemformat.cpp pcmodelformat.cpp \
 @BUILD_SHARED_FALSE@	pdbformat.cpp povrayformat.cpp qchemformat.cpp reportformat.cpp \
@@ -707,7 +720,9 @@ EXTRA_DIST = exampleformat.cpp
 @BUILD_SHARED_TRUE@hinformat_la_SOURCES = hinformat.cpp
 @BUILD_SHARED_TRUE@hinformat_la_LDFLAGS = -module -avoid-version 
 @BUILD_SHARED_TRUE@inchiformat_la_SOURCES = inchiformat.cpp
-@BUILD_SHARED_TRUE@inchiformat_la_LDFLAGS = -module -avoid-version inchi/libinchi.la
+@BUILD_INCHI_FALSE@@BUILD_SHARED_TRUE@inchiformat_la_LDFLAGS = -module -avoid-version
+@BUILD_INCHI_TRUE@@BUILD_SHARED_TRUE@inchiformat_la_LDFLAGS = -module -avoid-version inchi/libinchi.la
+@BUILD_INCHI_FALSE@@BUILD_SHARED_TRUE@inchiformat_la_LIBADD = -linchi
 @BUILD_SHARED_TRUE@jaguarformat_la_SOURCES = jaguarformat.cpp
 @BUILD_SHARED_TRUE@jaguarformat_la_LDFLAGS = -module -avoid-version 
 @BUILD_SHARED_TRUE@mdlformat_la_SOURCES = mdlformat.cpp
@@ -769,9 +784,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  src/formats/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  src/formats/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  src/formats/Makefile
+	  $(AUTOMAKE) --foreign  src/formats/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
