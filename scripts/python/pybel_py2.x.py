@@ -408,6 +408,10 @@ class Molecule(object):
             v = mol.create_vertex()
             v.symbol = etab.GetSymbol(atom.atomicnum)
             v.charge = atom.formalcharge
+            if atom.spin==0:                 ## added by Richard West rwest@mit.edu
+                v.multiplicity = 1           # note that OpenBabel uses s=0 for nonradicals
+            else:                            # but s=n+1 for n-radicals 
+                v.multiplicity = atom.spin   # as described at http://openbabel.org/wiki/Radicals_and_SMILES_extensions#How_OpenBabel_does_it
             if usecoords:
                 v.x, v.y, v.z = atom.coords[0] * 30., atom.coords[1] * 30., 0.0
             mol.add_vertex(v)
@@ -415,6 +419,8 @@ class Molecule(object):
         for bond in ob.OBMolBondIter(self.OBMol):
             e = mol.create_edge()
             e.order = bond.GetBO()
+            if e.order == 5:   ## added by rwest@mit.edu
+                e.set_order(4) ## added by rwest@mit.edu
             if bond.IsHash():
                 e.type = "h"
             elif bond.IsWedge():
@@ -422,6 +428,8 @@ class Molecule(object):
             mol.add_edge(bond.GetBeginAtomIdx() - 1,
                          bond.GetEndAtomIdx() - 1,
                          e)
+        # recount the valency etc. of the atom? ## added by rwest@mit.edu
+        mol._flush_cache() ## added by rwest@mit.edu
         # I'm sure there's a more elegant way to do the following, but here goes...
         # let's set the stereochemistry around double bonds
         self.write("can") # Perceive UP/DOWNness
@@ -451,6 +459,7 @@ class Molecule(object):
                     mol.add_stereochemistry(st)
         
         mol.remove_unimportant_hydrogens()
+        mol.localize_aromatic_bonds() ## added by rwest@mit.edu
         if not usecoords:
             oasa.coords_generator.calculate_coords(mol, bond_length=30)
             if update:
