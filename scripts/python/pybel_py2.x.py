@@ -409,9 +409,11 @@ class Molecule(object):
             v.symbol = etab.GetSymbol(atom.atomicnum)
             v.charge = atom.formalcharge
             if atom.spin==0:                 ## added by Richard West rwest@mit.edu
-                v.multiplicity = 1           # note that OpenBabel uses s=0 for nonradicals
-            else:                            # but s=n+1 for n-radicals 
-                v.multiplicity = atom.spin   # as described at http://openbabel.org/wiki/Radicals_and_SMILES_extensions#How_OpenBabel_does_it
+                v.multiplicity = 1           # note that OpenBabel uses s=0 for nonradicals but s=n+1 for n-radicals 
+            else:                            # as described at http://openbabel.org/wiki/Radicals_and_SMILES_extensions#How_OpenBabel_does_it
+                v.multiplicity = atom.spin   
+                v.properties_['show_hydrogens'] = True # explicitly show hydrogen count on radical sites
+                v.properties_['show_symbol'] = True    # explicitly show symbol (and hence .) on radical sites
             if usecoords:
                 v.x, v.y, v.z = atom.coords[0] * 30., atom.coords[1] * 30., 0.0
             mol.add_vertex(v)
