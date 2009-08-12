@@ -256,7 +256,8 @@ class OBIter(object):
     def __init__(self, *params):
         self.iter = self.OBiterator(*params)
         self.finished = False
-        if not self.iter.__bool__():
+        if not self.iter.__ref__():
+      # Hopefully __ref__() is always None (False) when iterations are complete
             self.finished = True
 
     def __iter__(self):
@@ -266,7 +267,7 @@ class OBIter(object):
         if not self.finished:
             b = self.iter.__ref__()
             self.iter.inc()
-            if not self.iter.__bool__():
+            if not self.iter.__ref__():
                 # There is nothing left to iterate over
                 self.finished = True
             return b
@@ -279,7 +280,7 @@ class OBIterWithDepth(OBIter):
             b = self.iter.__ref__()
             depth = self.iter.CurrentDepth()
             self.iter.inc()
-            if not self.iter.__bool__():
+            if not self.iter.__ref__():
                 # There is nothing left to iterate over
                 self.finished = True
             return b, depth
