@@ -494,7 +494,11 @@ class Molecule(object):
             canvas.font_size = fontsize
             canvas.bond_width = bondwidth
             canvas.line_width = linewidth
-            canvas.mol_to_cairo(mol, filename)
+            format = os.path.splitext(filename)[1].strip('.') # eg. 'pdf' or 'png'
+            if format in ['pdf','png']:
+                canvas.mol_to_cairo(mol, filename, format)
+            else:
+                canvas.mol_to_cairo(mol, filename)
             if show:
                 if not tk:
                     errormessage = ("Tkinter or Python Imaging "
